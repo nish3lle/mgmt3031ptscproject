@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UWI Shuttle Guide – San Fernando ↔ St. Augustine (Unofficial)</title>
+  <meta name="description" content="Unofficial student-made guide to the San Fernando – UWI St. Augustine shuttle: schedules, routes and stops.">
+  <style>
+    :root {
+      --navy: #0b3a7a;
+      --navy-dark: #082a5a;
+      --blue-light: #eaf3fc;
+      --yellow-light: #fff7e0;
+      --green: #1e9e4a;
+      --amber: #f2b705;
+      --red: #d93025;
+      --grey: #8a8f98;
+      --text: #1d2733;
+      --border: #d5deea;
+      --radius: 10px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text);
+      background: #f6f8fb;
+      line-height: 1.5;
+    }
+    a { color: var(--navy); }
+    .skip-link {
+      position: absolute; left: -999px; top: 0;
+      background: #fff; padding: 8px 12px; z-index: 100;
+    }
+    .skip-link:focus { left: 8px; top: 8px; }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+
+    /* Unofficial banner */
+    .notice {
+      background: #fff3cd; color: #5c4400;
+      font-size: 0.9rem; text-align: center; padding: 8px 16px;
+      border-bottom: 1px solid #ecd58a;
+    }
+
+    /* Header */
+    header { background: #fff; border-bottom: 1px solid var(--border); }
+    .header-inner {
+      display: flex; flex-wrap: wrap; align-items: center;
+      justify-content: space-between; gap: 12px; padding: 14px 16px;
+    }
+    .brand h1 { margin: 0; font-size: 1.3rem; color: var(--navy); }
+    .brand p { margin: 0; font-size: 0.95rem; color: #4a5a6e; }
+    nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+    nav a {
+      display: inline-block; padding: 8px 14px; border-radius: 6px;
+      text-decoration: none; font-weight: 500;
+    }
+    nav a:hover, nav a:focus { background: var(--blue-light); }
+    nav a.active { background: var(--navy); color: #fff; }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, var(--navy-dark), var(--navy) 60%, #1b5fb5);
+      color: #fff; padding: 48px 0 40px;
+    }
+    .hero h2 { margin: 0 0 10px; font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.1; }
+    .hero p { margin: 0 0 22px; font-size: 1.15rem; max-width: 560px; }
+    .hero-buttons { display: flex; flex-wrap: wrap; gap: 12px; }
+    .hero-buttons a {
+      background: #fff; color: var(--navy); text-decoration: none;
+      font-weight: 600; padding: 12px 18px; border-radius: var(--radius);
+    }
+    .hero-buttons a:hover, .hero-buttons a:focus { background: var(--blue-light); }
+
+    /* Sections */
+    section { padding: 28px 0; }
+    .card {
+      background: #fff; border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 20px;
+    }
+    h2.section-title { margin: 0 0 4px; font-size: 1.5rem; color: var(--navy); }
+    .subtitle { margin: 0 0 16px; color: #4a5a6e; }
+
+    /* Latest update */
+    .update {
+      background: var(--blue-light); border: 1px solid #c4dbf1;
+      border-radius: var(--radius); padding: 16px 20px;
+      display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center;
+    }
+    .update strong { color: var(--navy); font-size: 1.1rem; }
+    .update small { color: #4a5a6e; }
+
+    /* Status */
+    .legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 0.9rem; margin: 0 0 16px; padding: 0; list-style: none; }
+    .dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+    .green { background: var(--green); }
+    .amber { background: var(--amber); }
+    .red { background: var(--red); }
+    .grey { background: var(--grey); }
+
+    .times {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px;
+    }
+    .time-box {
+      background: #eef8f0; border: 1px solid #cfe8d6; border-radius: 8px;
+      padding: 12px; text-align: center;
+    }
+    .time-box b { display: block; font-size: 1.05rem; }
+
+    /* Dashboard */
+    .dashboard { background: var(--yellow-light); border-radius: var(--radius); padding: 20px; }
+    .dash-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+    .table-scroll { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; background: #fff; }
+    th {
+      background: var(--navy); color: #fff; text-align: left;
+      padding: 10px 12px; font-weight: 600;
+    }
+    td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+    .badge { display: inline-block; min-width: 90px; text-align: center; padding: 4px 10px; border-radius: 6px; font-weight: 600; }
+    .b-good { background: #cdeed6; }
+    .b-mod { background: #fde9a6; }
+    .b-low { background: #f7c9c5; }
+    .how { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+    .how h3 { margin: 0 0 8px; color: var(--navy); font-size: 1.05rem; }
+    .how ul { list-style: none; padding: 0; margin: 12px 0 0; }
+    .how li { margin-bottom: 10px; font-size: 0.92rem; }
+
+    /* Routes */
+    .routes { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .route { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .route h3 { margin: 0; background: var(--navy); color: #fff; padding: 12px 16px; font-size: 1.1rem; }
+    .route h3 span { display: block; font-weight: 400; font-size: 0.9rem; }
+    .route ol { margin: 0; padding: 14px 16px 14px 44px; columns: 2; column-gap: 24px; }
+    .route li { margin-bottom: 8px; break-inside: avoid; }
+
+    /* Info cards */
+    .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    .info-grid h3 { margin: 0 0 6px; color: var(--navy); }
+    .btn {
+      display: inline-block; background: var(--navy); color: #fff;
+      padding: 10px 18px; border-radius: 6px; text-decoration: none; font-weight: 600; margin-top: 8px;
+    }
+    .btn:hover, .btn:focus { background: var(--navy-dark); }
+
+    footer { background: #fff; border-top: 1px solid var(--border); padding: 20px 0; font-size: 0.9rem; color: #4a5a6e; text-align: center; }
+
+    :focus-visible { outline: 3px solid #1b5fb5; outline-offset: 2px; }
+
+    @media (max-width: 800px) {
+      .dash-grid, .routes { grid-template-columns: 1fr; }
+      .route ol { columns: 1; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <div class="notice" role="note">
+    Unofficial student-made guide. Always confirm times and service changes with the official operator.
+  </div>
+
+  <header>
+    <div class="wrap header-inner">
+      <div class="brand">
+        <h1>UWI Shuttle Guide</h1>
+        <p>San Fernando ↔ UWI St. Augustine</p>
+      </div>
+      <nav aria-label="Main navigation">
+        <ul>
+          <li><a class="active" href="#top">Home</a></li>
+          <li><a href="#schedules">Schedules</a></li>
+          <li><a href="#routes">Routes &amp; Stops</a></li>
+          <li><a href="#updates">Service Updates</a></li>
+          <li><a href="#fares">Fares</a></li>
+          <li><a href="#guidelines">Guidelines</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- HERO -->
+    <div class="hero" id="top">
+      <div class="wrap">
+        <h2>Your Journey to UWI,<br>Made Easier.</h2>
+        <p>Find schedules, routes and stops for the San Fernando – UWI shuttle service.</p>
+        <div class="hero-buttons">
+          <a href="#updates">📢 Check Service Updates</a>
+          <a href="#schedules">📅 View Schedules</a>
+          <a href="#routes">📍 See Routes &amp; Stops</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <!-- LATEST UPDATE (edit by hand) -->
+      <section id="updates" aria-labelledby="update-h">
+        <div class="update">
+          <div>
+            <strong id="update-h">Latest Update</strong>
+            <p style="margin:4px 0 0;">
+              <!-- EDIT THIS TEXT WHEN SERVICE CHANGES -->
+              No reported disruptions at the time of the last update. Check the official operator for live information.
+            </p>
+          </div>
+          <small>Last updated:<br>14 Oct 2026, 1:05 PM</small><!-- EDIT DATE -->
+        </div>
+      </section>
+
+      <!-- TODAY'S SERVICES -->
+      <section aria-labelledby="today-h">
+        <div class="card">
+          <h2 class="section-title" id="today-h">Services to UWI</h2>
+          <p class="subtitle">Departures from San Fernando. Statuses are updated manually.</p>
+          <ul class="legend" aria-label="Status legend">
+            <li><span class="dot green"></span>On schedule</li>
+            <li><span class="dot amber"></span>Delayed</li>
+            <li><span class="dot red"></span>Cancelled</li>
+            <li><span class="dot grey"></span>Awaiting update</li>
+          </ul>
+          <div class="times">
+            <!-- Copy a box per departure. Change the dot class (green/amber/red/grey) and the status text. -->
+            <div class="time-box"><b>1:00 PM</b><span class="dot green"></span>On schedule</div>
+            <div class="time-box"><b>1:30 PM</b><span class="dot green"></span>On schedule</div>
+            <div class="time-box"><b>2:00 PM</b><span class="dot green"></span>On schedule</div>
+            <div class="time-box"><b>2:30 PM</b><span class="dot green"></span>On schedule</div>
+            <div class="time-box"><b>3:00 PM</b><span class="dot green"></span>On schedule</div>
+            <div class="time-box"><b>3:30 PM</b><span class="dot green"></span>On schedule</div>
+            <div class="time-box"><b>4:00 PM</b><span class="dot green"></span>On schedule</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RELIABILITY DASHBOARD -->
+      <section id="schedules" aria-labelledby="dash-h">
+        <div class="dashboard">
+          <h2 class="section-title" id="dash-h">Service Reliability &amp; Seating</h2>
+          <p class="subtitle">Sample data. Replace with your own observations before publishing.</p>
+          <div class="dash-grid">
+            <div class="table-scroll">
+              <table>
+                <caption class="sr-only" style="position:absolute;left:-999px;">Reliability and seating by departure time</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Departure</th>
+                    <th scope="col">On-time reliability</th>
+                    <th scope="col">Seat availability</th>
+                    <th scope="col">Overall</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row" style="background:#fff;color:inherit;">6:00 AM</th>
+                    <td><span class="dot green"></span>Usually on time</td>
+                    <td><span class="dot red"></span>Often full</td>
+                    <td><span class="badge b-low">Low</span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row" style="background:#fff;color:inherit;">7:00 AM</th>
+                    <td><span class="dot amber"></span>Sometimes late</td>
+                    <td><span class="dot amber"></span>Space varies</td>
+                    <td><span class="badge b-mod">Moderate</span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row" style="background:#fff;color:inherit;">8:00 AM</th>
+                    <td><span class="dot green"></span>Usually on time</td>
+                    <td><span class="dot green"></span>Space usually available</td>
+                    <td><span class="badge b-good">Good</span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row" style="background:#fff;color:inherit;">9:00 AM</th>
+                    <td><span class="dot amber"></span>Sometimes late</td>
+                    <td><span class="dot green"></span>Space usually available</td>
+                    <td><span class="badge b-mod">Moderate</span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row" style="background:#fff;color:inherit;">12:00 PM</th>
+                    <td><span class="dot green"></span>Usually on time</td>
+                    <td><span class="dot amber"></span>Space varies</td>
+                    <td><span class="badge b-good">Good</span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row" style="background:#fff;color:inherit;">4:00 PM</th>
+                    <td><span class="dot amber"></span>Sometimes late</td>
+                    <td><span class="dot red"></span>Often full</td>
+                    <td><span class="badge b-low">Low</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <aside class="how" aria-labelledby="how-h">
+              <h3 id="how-h">How is this determined?</h3>
+              <p style="margin:0;font-size:0.92rem;">Ratings are based on your own recorded departure times, delays and passenger counts.</p>
+              <ul>
+                <li><span class="dot green"></span>80–100% on time / space usually available</li>
+                <li><span class="dot amber"></span>60–79% on time / space varies</li>
+                <li><span class="dot red"></span>Below 60% on time / often full</li>
+                <li><span class="dot grey"></span>Insufficient data</li>
+              </ul>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <!-- ROUTES -->
+      <section id="routes" aria-labelledby="routes-h">
+        <h2 class="section-title" id="routes-h">Routes &amp; Designated Stops</h2>
+        <p class="subtitle">Loading and offloading points for the San Fernando – UWI shuttle.</p>
+        <div class="routes">
+          <div class="route">
+            <h3>San Fernando → UWI <span>(Outbound)</span></h3>
+            <ol>
+              <li>San Fernando Terminal</li>
+              <li>Skinners Park</li>
+              <li>Pleasantville</li>
+              <li>Mon Repos</li>
+              <li>San Fernando Technical Institute</li>
+              <li>Gasparillo</li>
+              <li>Claxton Bay</li>
+              <li>Preysal</li>
+              <li>Freeport</li>
+              <li>Chaguanas</li>
+              <li>Mount Hope</li>
+              <li>WASA</li>
+              <li>Curepe TML</li>
+              <li>Curepe Terminal</li>
+              <li>UWI Campus</li>
+            </ol>
+          </div>
+          <div class="route">
+            <h3>UWI → San Fernando <span>(Inbound)</span></h3>
+            <ol>
+              <li>UWI Campus</li>
+              <li>Curepe Terminal</li>
+              <li>Curepe TML</li>
+              <li>WASA</li>
+              <li>Mount Hope</li>
+              <li>Chaguanas</li>
+              <li>Freeport</li>
+              <li>Preysal</li>
+              <li>Couva Children's Hospital (Highway, south bound)</li>
+              <li>Claxton Bay</li>
+              <li>Gasparillo</li>
+              <li>San Fernando Technical Institute</li>
+              <li>Mon Repos</li>
+              <li>Pleasantville</li>
+              <li>Skinners Park</li>
+              <li>San Fernando Teaching Hospital</li>
+              <li>San Fernando Terminal</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- INFO CARDS -->
+      <section aria-label="More information">
+        <div class="info-grid">
+          <div class="card" id="full-schedules">
+            <h3>Full Schedules</h3>
+            <p>Official departure times for both routes.</p>
+            <!-- Replace with a link to the official schedule or your own PDF -->
+            <a class="btn" href="#schedules">View Schedules</a>
+          </div>
+          <div class="card" id="fares">
+            <h3>Fares &amp; Payment</h3>
+            <p>Add current fares and accepted payment methods here once you have confirmed them with the operator.</p>
+            <a class="btn" href="#fares">View Fare Info</a>
+          </div>
+          <div class="card" id="guidelines">
+            <h3>Passenger Guidelines</h3>
+            <p>Boarding rules, designated stops and other important information. Add your confirmed details here.</p>
+            <a class="btn" href="#guidelines">View Guidelines</a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <p style="margin:0;">Unofficial, student-made information page. Not affiliated with or endorsed by the shuttle operator or UWI. Confirm all details with official sources.</p>
+    </div>
+  </footer>
+</body>
+</html>
